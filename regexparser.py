@@ -49,12 +49,5 @@ def regexParse(r):
     i, node = parseSplit(r,0)
     return node
 
-
-
-print(regexParse("(A(B|DE)|B)C"))
-
-
-
-
-
-
+if __name__ == "__Main__":
+    print("Hi")
