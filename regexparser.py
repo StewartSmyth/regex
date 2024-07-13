@@ -1,5 +1,4 @@
 #### r is regex and i is the current position
-#### 
 
 def parseSplit(r,i):
     i, left = parseConcat(r,i)
@@ -32,18 +31,35 @@ def parseNode(r,i):
             i+=1
         else:
             raise Exception("Unbalenced brackets")
+        
+    elif ch in "+*":
+        raise Exception("Nothing to repeat")
 
-    elif ch == '.':
-        node = "dot"
     else:
         node = ch
     
+    i, node = parsePostfix(r,i,node)
     return i, node
 
 
-def parsePostfix(r,i):
-    pass
-    #TODO
+def parsePostfix(r,i, node):
+    if i == len(r) or r[i] not in "*+":
+        return i, node
+    
+    ch = r[i]
+    i+=1
+
+    #rmin, rmax are minimum and maximum amount of times can be repeated
+    if ch == "*":
+        rmin, rmax = 0,float("inf")
+    elif ch == "+":
+        rmin, rmax == 1, float("inf")
+    else:
+        raise Exception("Shouldn't be here")
+    
+    node = ("Repeat", node, rmin, rmax)
+    return i, node
+    
 
 def regexParse(r):
     i, node = parseSplit(r,0)
