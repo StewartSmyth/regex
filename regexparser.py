@@ -31,7 +31,10 @@ def parseNode(r,i):
             i+=1
         else:
             raise Exception("Unbalenced brackets")
-        
+
+    elif ch == ".":
+        node = "dot"
+
     elif ch in "+*":
         raise Exception("Nothing to repeat")
 
