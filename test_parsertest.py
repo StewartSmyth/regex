@@ -16,8 +16,6 @@ class Test_TestParse(unittest.TestCase):
         self.assertEqual(regexParse("AB|A"), ("split", ("concatinate", 'A', 'B'), 'A'))
 
     def testAllTogether(self):
-        print(regexParse("A*|(B|C)+|D."))
-        print(('split', ('split', ('Repeat', 'A', 0, float("inf")), ('Repeat', ('split', 'B', 'C'), 1, float("inf")), ('concatinate', 'D', 'wild'))))
         self.assertEqual(regexParse("A*|(B|C)+|D."), ('split', ('split', ('Repeat', 'A', 0, float("inf")), ('Repeat', ('split', 'B', 'C'), 1, float("inf"))), ('concatinate', 'D', 'wild')))
 
     def testUnbalencedBrackets(self):
