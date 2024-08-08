@@ -1,39 +1,52 @@
-#### r is regex and i is the current position
+#Precidence: (), repeat chars, concatinate, split
+
 
 def parseSplit(r,i):
-    i, left = parseConcat(r,i)
-    while i<len(r):
+    #parse left side of split first
+    i, left = parseConcatination(r,i)
+    
+    while i<len(r): #if length at the end of left side of split is less than 
+        
         if r[i] == ')':
+            #must be end of regex or of this subrexex in regex
             break
-        assert r[i] == '|', 'BUG'
-        i, right = parseConcat(r,i+1)
-        left = ('split', left, right)
+        
+        assert r[i] == '|', f"Bug: {r[i]}, This character should be |" #bug if char inbetween left and right of split is not | 
+        i, right = parseConcatination(r,i+1) #parse the right side of the 
+        left = ("split", left, right)
     return i,left
 
-def parseConcat(r,i):
+def parseConcatination(r,i):
     left = None
     while i<len(r):
         if r[i] in "|)":
-            break
+            break #break back to split as it is no longer concatinated
         i, node = parseNode(r,i)
         if left is None:
             left = node
         else:
-            left = ('cat', left, node)
+            left = ("concatinate", left, node)
     return i, left
 
 def parseNode(r,i):
+
     ch = r[i]
     i+=1
+
+    #create subexpression when come across a bracket so could go back to lowest precidence Split
     if ch == '(':
         i, node = parseSplit(r,i)
+        #if there is no more chars or the next char is not a ) then there is unbalenced brackets
         if i<len(r) and r[i] == ')':
             i+=1
         else:
+            
             raise Exception("Unbalenced brackets")
 
-    elif ch == ".":
-        node = "dot"
+
+    #dot is wildcard char
+    elif ch == '.':
+        node = "wild"
 
     elif ch in "+*":
         raise Exception("Nothing to repeat")
@@ -52,21 +65,25 @@ def parsePostfix(r,i, node):
     ch = r[i]
     i+=1
 
-    #rmin, rmax are minimum and maximum amount of times can be repeated
-    if ch == "*":
-        rmin, rmax = 0,float("inf")
-    elif ch == "+":
-        rmin, rmax == 1, float("inf")
-    else:
-        raise Exception("Shouldn't be here")
+    #min, max are minimum and maximum amount of times can be repeated
+    if ch == '*':
+        min, max = 0,float("inf")
+    elif ch == '+':
+        min, max == 1, float("inf")
+
     
-    node = ("Repeat", node, rmin, rmax)
+    else:
+        raise Exception(f"Character {ch} not accepted")
+    
+    node = ("Repeat", node, min, max)
     return i, node
     
 
+#entry point
 def regexParse(r):
+    #split lowest precidence so start there and deal with other possibilies ontop of that
     i, node = parseSplit(r,0)
     return node
 
 if __name__ == "__Main__":
-    print("Hi")
+    print("Run via tests or userInput")

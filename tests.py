@@ -1,22 +1,22 @@
 from regexparser import regexParse
+import unittest
 
-Tests = [["A","A"], ["A|B",('split', 'A', 'B')],["(A(B|DE)|B)C",('cat', ('split', ('cat', 'A', ('split', 'B', ('cat', 'D', 'E'))), 'B'), 'C')]]
+#REGEX PARSING TESTS
 
 
-flag = True
+#TESTS THAT ARE NOT EXCEPTIONS
+Tests = [["A","A"], ["A|B",("split", 'A', 'B')],["(A(B|DE)|B)C",("concatinate", ("split", ("concatinate", 'A', ("split", 'B', ("concatinate" 'D', 'E'))), 'B'), 'C')]]
 
-for test in Tests:
-    parsedRegex = regexParse(test[0])
+class TestParse(unittest.TestCase):
+    def testLetter(self):
+        self.assertEqual(regexParse("A"), "A")
+    def testSplit(self):
+        self.assertEqual(regexParse("A|B"), ("split", 'A', 'B'))
+    def testConcatination(self):
+        self.assertEqual(regexParse("AB"), ("concatinate", 'A', 'B'))
+    def testSplitConcatination(self):
+        self.assertEqual(regexParse("AB|A"), ("split", ("concatinate", 'A', 'B'), 'A'))
 
-    if(parsedRegex != test[1]):
-        print(f"Test failed, does not match, parsed regex: {parsedRegex} and test regex: {test[1]}")
-        flag = False
-
-    else:
-        print(f"Test passed, does match, parsed regex: {parsedRegex} and test regex: {test[1]}")
-
-if flag == True:
-    print("---ALL PASSED---")
-else:
-    print("---TESTS FAILED---")
+if __name__ == "__main__":
+    unittest.main()
 
