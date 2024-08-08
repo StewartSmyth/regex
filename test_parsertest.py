@@ -2,7 +2,7 @@ from regexparser import regexParse
 import unittest
 
 
-class Test_TestParse(unittest.TestCase):
+class TestParse(unittest.TestCase):
     def testLetter(self):
         self.assertEqual(regexParse("A"), "A")
 
