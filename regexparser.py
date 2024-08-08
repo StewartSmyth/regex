@@ -17,20 +17,22 @@ def parseSplit(r,i):
     return i,left
 
 def parseConcatination(r,i):
-    left = None
+    concatExp = None
     while i<len(r):
         if r[i] in "|)":
             break #break back to split as it is no longer concatinated
         i, node = parseNode(r,i)
-        if left is None:
-            left = node
+        if concatExp is None:
+            concatExp = node
         else:
-            left = ("concatinate", left, node)
-    return i, left
+            concatExp = ("concatinate", concatExp, node)
+    return i, concatExp
 
 def parseNode(r,i):
 
+    #currentChar
     ch = r[i]
+
     i+=1
 
     #create subexpression when come across a bracket so could go back to lowest precidence Split
@@ -59,21 +61,19 @@ def parseNode(r,i):
 
 
 def parsePostfix(r,i, node):
+    #if its not a postfix letter then return
     if i == len(r) or r[i] not in "*+":
         return i, node
     
+    #ch is the postfix letter
     ch = r[i]
     i+=1
 
     #min, max are minimum and maximum amount of times can be repeated
     if ch == '*':
-        min, max = 0,float("inf")
+        min, max = 0, float("inf")
     elif ch == '+':
-        min, max == 1, float("inf")
-
-    
-    else:
-        raise Exception(f"Character {ch} not accepted")
+        min, max = 1, float("inf")
     
     node = ("Repeat", node, min, max)
     return i, node
