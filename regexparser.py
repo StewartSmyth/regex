@@ -85,5 +85,5 @@ def regexParse(r):
     i, node = parseSplit(r,0)
     return node
 
-if __name__ == "__Main__":
+if __name__ == "__main__":
     print("Run via tests or userInput")
