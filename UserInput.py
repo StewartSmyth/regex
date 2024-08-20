@@ -1,7 +1,12 @@
 from regexparser import regexParse
+from regexmatcher import regexMatch
 
 
-inp = input("Input regex: ")
+inpRegex = input("Input regex: ")
 
-print(f"Regex: {regexParse(inp)}")
+print(f"Regex: {regexParse(inpRegex)}")
+
+inpTextToMatch = input("Input text: ")
+
+regexMatch(inpTextToMatch, inpRegex)
 

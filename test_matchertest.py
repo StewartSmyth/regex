@@ -20,6 +20,11 @@ class TestMatch(unittest.TestCase):
 
     def testConcatAndSplit2(self):
         self.assertTrue(regexMatch("AA", ("split", "A", ("concatinate", "A", ("split", "A", ("concatinate", "B", "C"))))))
+    
+    def testBrackets(self):
+        self.assertTrue(regexMatch("ABCDE", ('concatinate', ('concatinate', ('split', ('concatinate', 'A', 'B'), ('concatinate', ('concatinate', 'A', 'B'), 'C')), 'D'), 'E')))
+
+
 
 
     
@@ -27,3 +32,5 @@ class TestMatch(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
