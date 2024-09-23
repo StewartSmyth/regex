@@ -1,14 +1,4 @@
-#Need to do:
-#change firstSecondMatch to indivudual so no copying and makes it actually work
-#implement backtracking tree to allow for if there is multiple true options such as if both split return true can do both
-
-
-
-
-
-#implement backtracking tree
-backtrackingTree = []
-
+#need to: implement repeat chars
 
 def firstSecondMatch(i, text, regex) -> tuple[bool, bool, int, int]:
     #first child
