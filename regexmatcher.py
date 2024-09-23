@@ -10,22 +10,27 @@
 backtrackingTree = []
 
 
-
-def firstSecondMatch(i, text, regex) -> tuple[bool, bool]:
+def firstSecondMatch(i, text, regex) -> tuple[bool, bool, int, int]:
     #first child
     first,second = False,False
+    firstIncrement, secondIncrement = 0, 0
     if isinstance(regex[1], str):
         first = matchStr(i, text, regex[1])
-        i+=1
+        firstIncrement+=1
     else:
-        first = matchRegex(i, text, regex[1])
+        first, firstIncrement = matchRegex(i, text, regex[1])
+    i+=firstIncrement
     #second child
+    if i >= len(text):
+        return first, False, firstIncrement, 0
     if isinstance(regex[2], str):
         second = matchStr(i, text, regex[2])
+        secondIncrement+=1
         i+=1
     else:
-        second = matchRegex(i, text, regex[2])
-    return first,second
+        second, secondIncrement = matchRegex(i, text, regex[2])
+    i += secondIncrement
+    return first,second,firstIncrement,secondIncrement
 
 
 
@@ -33,73 +38,36 @@ def firstSecondMatch(i, text, regex) -> tuple[bool, bool]:
 def matchRegex(i:int , text: str, regex: tuple) -> bool | tuple[bool, int]:
     # in instance that original call is a character node
     if isinstance(regex, str):
-        return matchStr(i, text, regex)
+        return matchStr(i, text, regex), 0
     if i == len(text):
-        return True
+        return True, 0
     
 
     firstElement = regex[0]
     
 
-    #concatinate simple as there is only one case so no backtracking required
     if firstElement == "concatinate":
-        first, second = firstSecondMatch(i, text, regex)
+        first, second, firstIncrement, secondIncrement = firstSecondMatch(i, text, regex)
         if first and second:
-            return True
+            return True, firstIncrement+secondIncrement
+        else:
+            return False, 0
 
     #split requires to create multiple solutions 
     if firstElement == "split":
-        first, second = firstSecondMatch(i, text, regex)
-        if first and second:
-            pass #figure it out include backtracking tree
-        elif first:
-            return True
+        first, second, firstIncrement, secondIncrement = firstSecondMatch(i, text, regex)
+        if first:
+            return True, firstIncrement
         elif second:
-            return True
-        
+            return True, secondIncrement
+        else:
+            return False, 0
 
-
-
-    # if len(firstElement) != 1 and firstElement != "wild":
-    #     #check whether each child regex is a character or a node
-    #     #go into either match depending on what it is
-    #     #store whether it is true or false
-    #     first = False
-    #     second = False
-    #     #first child
-    #     print(i, text, regex)
-    #     if isinstance(regex[1], str):
-    #         first = matchStr(i, text, regex[1])
-    #     else:
-    #         first = matchRegex(i, text, regex[1])
-
-    #     i+=1
-    #     #if first child of split is true then we can ignore second child
-
-    #     if firstElement == "split" and first:
-    #         return True
-
-        
-    #     #second child
-    #     if isinstance(regex[2], str):
-    #         second = matchStr(i, text, regex[2])
-    #     else:
-    #         second = matchRegex(i, text, regex[2])
-
-    #     i+=1
-    #     #already checked first child in occasion of split so only need to check second child
-    #     if firstElement == "split" and second:
-    #         return True
-        
-
-        
-    print("HELLO HERE :", regex)
-           
+    return False,0
         
 
 
 def matchStr(i:int, text:str, char: str) -> bool:
-    print(i, char)
     if text[i] == char:
         return True
     else:
@@ -108,7 +76,7 @@ def matchStr(i:int, text:str, char: str) -> bool:
 
 
 def regexMatch(text: str, regex:tuple):
-    acceptable = matchRegex(0, text, regex)
+    acceptable, integer = matchRegex(0, text, regex)
     if acceptable:
         print("Regex matches text")
         return True
@@ -119,5 +87,4 @@ def regexMatch(text: str, regex:tuple):
 
 
 if __name__ == "__main__":
-    
-    regexMatch("ABCDE", ('concatinate', ('concatinate', ('split', ('concatinate', 'A', 'B'), ('concatinate', ('concatinate', 'A', 'B'), 'C')), 'D'), ("split", 'A', 'E')))
+    regexMatch("a", "ab|acd")
